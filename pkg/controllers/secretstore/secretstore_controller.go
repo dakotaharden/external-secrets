@@ -25,6 +25,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	esapi "github.com/external-secrets/external-secrets/apis/externalsecrets/v1"
 	ctrlmetrics "github.com/external-secrets/external-secrets/pkg/controllers/metrics"
@@ -78,5 +79,6 @@ func (r *StoreReconciler) SetupWithManager(mgr ctrl.Manager, opts controller.Opt
 	return ctrl.NewControllerManagedBy(mgr).
 		WithOptions(opts).
 		For(&esapi.SecretStore{}).
+		WithEventFilter(predicate.GenerationChangedPredicate{}).
 		Complete(r)
 }
